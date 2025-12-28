@@ -61,7 +61,7 @@ class Loan(models.Model):
     duration = fields.Integer(
         string='Días de Préstamo',
         compute='_compute_duration',
-        store=True
+        store=True  # <--- Significa que se almacena en una base de datos.
     )
 
     # Decorador @api.depends 
