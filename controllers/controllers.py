@@ -1,22 +1,25 @@
 # -*- coding: utf-8 -*-
-# from odoo import http
+from odoo import http
+from odoo.http import request
+import json
 
+class LibraryYubo(http.Controller):
 
-# class LibraryYubo(http.Controller):
-#     @http.route('/library_yubo/library_yubo', auth='public')
-#     def index(self, **kw):
-#         return "Hello, world"
-
-#     @http.route('/library_yubo/library_yubo/objects', auth='public')
-#     def list(self, **kw):
-#         return http.request.render('library_yubo.listing', {
-#             'root': '/library_yubo/library_yubo',
-#             'objects': http.request.env['library_yubo.library_yubo'].search([]),
-#         })
-
-#     @http.route('/library_yubo/library_yubo/objects/<model("library_yubo.library_yubo"):obj>', auth='public')
-#     def object(self, obj, **kw):
-#         return http.request.render('library_yubo.object', {
-#             'object': obj
-#         })
-
+    # 1. API: Obtener la lista completa de libros (GET)
+    # Dirección de acceso: http://localhost:8069/api/books
+    @http.route('/api/books', auth='public', type='http', methods=['GET'], csrf=False)
+    def get_books(self, **kw):
+        books = request.env['library_yubo.book'].sudo().search([])
+        book_list = []
+        for book in books:
+            book_list.append({
+                'id': book.id,
+                'title': book.name,
+                'author': book.author_id.name,
+                'state': book.state,
+            })
+        
+        return request.make_response(
+            json.dumps({'status': 200, 'data': book_list}),
+            headers={'Content-Type': 'application/json'}
+        )

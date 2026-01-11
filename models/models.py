@@ -19,6 +19,18 @@ class Author(models.Model):
     # Relación One2many: un autor puede tener varios libros 
     book_ids = fields.One2many('library_yubo.book', 'author_id', string='Libros')
 
+
+    total_loans = fields.Integer(string="Total Préstamos", compute="_get_total_loans")
+
+    def _get_total_loans(self):
+        # Utilice env para obtener el modelo de préstamo
+        Loan = self.env['library_yubo.loan']
+        for author in self:
+            # Busque todos los libros de este autor
+            # Cuente cuántas veces se han tomado prestados estos libros
+            count = Loan.search_count([('book_id.author_id', '=', author.id)])
+            author.total_loans = count
+
 # 3. Modelo de Libro (versión actualizada)
 class Book(models.Model):
     _name = 'library_yubo.book'
@@ -50,6 +62,15 @@ class Loan(models.Model):
     book_id = fields.Many2one('library_yubo.book', string='Libro', required=True)
     member_id = fields.Many2one('res.partner', string='Socio', required=True)
     
+
+    author_id = fields.Many2one(
+        'library_yubo.author',
+        string="Autor",
+        related='book_id.author_id', # Encuentra author_id usando book_id
+        readonly=True,
+        store=True
+    )
+
     # Uso de lambda para establecer el valor por defecto 
     loan_date = fields.Date(
         string='Fecha de Préstamo',
@@ -81,3 +102,15 @@ class Loan(models.Model):
                 raise ValidationError(
                     'La fecha de devolución no puede ser anterior a la de préstamo.'
                 )
+    name = fields.Char(string="Referencia Préstamo", compute="_get_loan_ref", store=True)
+
+    @api.depends('book_id', 'member_id')
+    def _get_loan_ref(self):
+        for loan in self:
+            if loan.book_id and loan.member_id:
+                # genera id 
+                loan.name = f"{loan.book_id.name[:3].upper()}_{loan.member_id.name[:3].upper()}_{loan.id}"
+            else:
+                loan.name = "NEW"
+
+   

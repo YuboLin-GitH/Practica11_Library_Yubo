@@ -6,6 +6,7 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="name"/>
+                    <field name="total_loans" string="Veces Prestado" sum="Total"/>
                     <field name="book_ids" widget="many2many_tags"/>
                 </tree>
             </field>
