@@ -6,7 +6,7 @@ from datetime import timedelta
 
 # 1. Herencia del modelo: hereda del modelo existente de lector / partner 
 class Member(models.Model):
-    _inherit = 'res.partner'  # Cumple el requisito de herencia en algún modelo
+    _inherit = 'res.partner'  
     
     member_number = fields.Char(string='Número de Socio')
 
@@ -54,7 +54,7 @@ class Genre(models.Model):
     
     name = fields.Char(string='Género', required=True)
 
-# 5. Modelo de Préstamo (incluye lógica avanzada)
+# 5. Modelo de Préstamo 
 class Loan(models.Model):
     _name = 'library_yubo.loan'
     _description = 'Registro de préstamos'
