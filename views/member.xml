@@ -1,5 +1,15 @@
 <odoo>
     <data>
+        <record id="view_partner_tree_library_inherit" model="ir.ui.view">
+            <field name="name">res.partner.tree.library.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='display_name']" position="after">
+                    <field name="member_number" optional="show"/>
+                </xpath>
+            </field>
+        </record>
         <record id="view_partner_form_library_inherit" model="ir.ui.view">
             <field name="name">res.partner.form.library.inherit</field>
             <field name="model">res.partner</field>
