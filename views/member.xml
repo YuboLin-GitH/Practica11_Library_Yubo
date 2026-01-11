@@ -16,6 +16,7 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='phone']" position="after">
+                    <label for="member_number" string="Número de Socio" />
                     <field name="member_number" placeholder="Ej. SOCIO-001"/>
                 </xpath>
             </field>
@@ -25,7 +26,7 @@
             <field name="name">Socios</field>
             <field name="res_model">res.partner</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('member_number', '!=', False)]</field> </record>
+            </record>
 
         <menuitem name="Socios" id="menu_library_yubo_member" 
                   parent="menu_library_yubo_management" 
